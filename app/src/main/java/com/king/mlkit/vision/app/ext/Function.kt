@@ -25,12 +25,13 @@ import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import com.king.logx.LogX
+import androidx.core.graphics.createBitmap
 
 /**
  * @author <a href="mailto:jenly1314@gmail.com">Jenly</a>
  */
 fun Bitmap.drawRect(block: (canvas: Canvas, paint: Paint) -> Unit): Bitmap {
-    val result = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+    val result = createBitmap(width, height)
     try {
         val canvas = Canvas(result)
         canvas.drawBitmap(this, 0f, 0f, null)

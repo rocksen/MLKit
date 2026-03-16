@@ -4,7 +4,7 @@
 [![JitPack](https://img.shields.io/jitpack/v/github/jenly1314/MLKit?logo=jitpack)](https://jitpack.io/#jenly1314/MLKit)
 [![CI](https://img.shields.io/github/actions/workflow/status/jenly1314/MLKit/build.yml?logo=github)](https://github.com/jenly1314/MLKit/actions/workflows/build.yml)
 [![Download](https://img.shields.io/badge/download-APK-brightgreen?logo=github)](https://raw.githubusercontent.com/jenly1314/MLKit/master/app/release/app-release.apk)
-[![API](https://img.shields.io/badge/API-21%2B-brightgreen?logo=android)](https://developer.android.com/guide/topics/manifest/uses-sdk-element#ApiLevels)
+[![API](https://img.shields.io/badge/API-23%2B-brightgreen?logo=android)](https://developer.android.com/guide/topics/manifest/uses-sdk-element#ApiLevels)
 [![License](https://img.shields.io/github/license/jenly1314/MLKit?logo=open-source-initiative)](https://opensource.org/licenses/apache-2-0)
 
 ML Kit是一个能够将谷歌专业的机器学习知识带到应用中的极其简单易用的封装包。无论您是否有机器学习的经验，您都可以在几行代码中实现您想要的功能。甚至，您无需对神经网络或者模型优化有多深入的了解，也能完成您想要做的事情。
@@ -105,36 +105,36 @@ Camera：为各个子库提供相机预览分析的核心库
     ```gradle
 
     //公共库 (*必须)
-    implementation 'com.github.jenly1314.MLKit:mlkit-common:2.3.0'
+    implementation 'com.github.jenly1314.MLKit:mlkit-common:2.4.0'
 
     //--------------------------
 
     //条码识别 (可选)
-    implementation 'com.github.jenly1314.MLKit:mlkit-barcode-scanning:2.3.0'
+    implementation 'com.github.jenly1314.MLKit:mlkit-barcode-scanning:2.4.0'
 
     //人脸检测 (可选)
-    implementation 'com.github.jenly1314.MLKit:mlkit-face-detection:2.3.0'
+    implementation 'com.github.jenly1314.MLKit:mlkit-face-detection:2.4.0'
 
     //人脸网格检测 (可选)
-    implementation 'com.github.jenly1314.MLKit:mlkit-face-mesh-detection:2.3.0'
+    implementation 'com.github.jenly1314.MLKit:mlkit-face-mesh-detection:2.4.0'
 
     //图像标签 (可选)
-    implementation 'com.github.jenly1314.MLKit:mlkit-image-labeling:2.3.0'
+    implementation 'com.github.jenly1314.MLKit:mlkit-image-labeling:2.4.0'
 
     //对象检测 (可选)
-    implementation 'com.github.jenly1314.MLKit:mlkit-object-detection:2.3.0'
+    implementation 'com.github.jenly1314.MLKit:mlkit-object-detection:2.4.0'
 
     //姿势检测 (可选)
-    implementation 'com.github.jenly1314.MLKit:mlkit-pose-detection:2.3.0'
+    implementation 'com.github.jenly1314.MLKit:mlkit-pose-detection:2.4.0'
 
     //姿势检测精确版 (可选)
-    implementation 'com.github.jenly1314.MLKit:mlkit-pose-detection-accurate:2.3.0'
+    implementation 'com.github.jenly1314.MLKit:mlkit-pose-detection-accurate:2.4.0'
 
     //自拍分割 (可选)
-    implementation 'com.github.jenly1314.MLKit:mlkit-segmentation-selfie:2.3.0'
+    implementation 'com.github.jenly1314.MLKit:mlkit-segmentation-selfie:2.4.0'
 
     //文字识别 (可选)
-    implementation 'com.github.jenly1314.MLKit:mlkit-text-recognition:2.3.0'
+    implementation 'com.github.jenly1314.MLKit:mlkit-text-recognition:2.4.0'
 
     ```
 
@@ -142,11 +142,13 @@ Camera：为各个子库提供相机预览分析的核心库
 
 #### 关于MLKit版本与编译的SDK版本要求
 
-> 使用 **v2.1.x** 以上版本时，要求 **compileSdkVersion >= 34**
+> 使用 **v2.4.0** 及以上版本时，要求 **compileSdk ≥ 35**
 
-> 使用 **v2.0.x** 以上版本时，要求 **compileSdkVersion >= 33**
+> 使用 **v2.1.0** 及以上版本时，要求 **compileSdk ≥ 34**
 
-> 如果 **compileSdkVersion < 33** 请使用 [**v1.x版本**](https://github.com/jenly1314/MLKit/tree/1.x/)
+> 使用 **v2.0.0** 及以上版本时，要求 **compileSdk ≥ 33**
+
+> 如果 **compileSdk < 33** 请使用 [**v1.x版本**](https://github.com/jenly1314/MLKit/tree/1.x/)
 
 ## 使用
 
@@ -333,9 +335,12 @@ compileOptions {
 
 ## 版本日志
 
-#### v2.3.0：2025-1-15
-* 更新CameraScan至v1.3.0
-* 更新MLKit相关依赖库版本
+#### v2.4.0：2026-3-16
+- 更新CameraScan至v1.4.1
+- 更新minSdk至23
+- 更新compileSdk至35
+- 更新Gradle至v8.13
+- 更新ViewfinderView至v1.4.0
 
 #### [查看更多版本日志](CHANGELOG.md)
 

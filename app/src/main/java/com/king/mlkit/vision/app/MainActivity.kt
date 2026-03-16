@@ -16,18 +16,18 @@
 package com.king.mlkit.vision.app
 
 import android.content.Intent
-import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
 import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.king.app.dialog.AppDialog
-import com.king.app.dialog.AppDialogConfig
+import com.king.app.dialog.appDialogConfig
 import com.king.camera.scan.CameraScan
 import com.king.logx.LogX
 import com.king.mlkit.vision.app.barcode.BarcodeScanningActivity
@@ -58,6 +58,22 @@ class MainActivity : AppCompatActivity() {
 
     private var toast: Toast? = null
 
+    private val startActivityLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK) {
+            processScanResult(result.data)
+        }
+    }
+
+    private val pickPhotoLauncher = registerForActivityResult(
+        ActivityResultContracts.PickVisualMedia()
+    ) { uri ->
+        uri?.also {
+            processPickPhotoResult(it)
+        }
+    }
+
     private fun showToast(text: String) {
         toast?.cancel()
         toast = Toast.makeText(this, text, Toast.LENGTH_SHORT)
@@ -69,18 +85,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == RESULT_OK) {
-            when (requestCode) {
-                REQUEST_CODE_PHOTO -> processPhoto(data?.data)
-                REQUEST_CODE_SCAN_CODE -> processScanResult(data)
-            }
-        }
-    }
-
-    private fun getContext() = this
-
     /**
      * 扫描结果
      */
@@ -90,13 +94,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * 处理图片 - 从图片中获取条码结果
+     * 处理选择图片后 - 从图片中获取条码结果
      */
-    private fun processPhoto(data: Uri?) {
+    private fun processPickPhotoResult(data: Uri?) {
         data?.let {
             try {
                 BarcodeDecoder.process(
-                    BarcodeDecoder.fromFilePath(getContext(), it),
+                    BarcodeDecoder.fromFilePath(this@MainActivity, it),
                     // 如果指定具体的识别条码类型，速度会更快
                     if (isQrCode) Barcode.FORMAT_QR_CODE else Barcode.FORMAT_ALL_FORMATS
                 ).addOnSuccessListener(this) { result ->
@@ -113,15 +117,17 @@ class MainActivity : AppCompatActivity() {
                                 }
                             }
                         }
-                        val config = AppDialogConfig(getContext(), R.layout.barcode_result_dialog)
-                        config.setContent(buffer)
-                            .setHideCancel(true)
-                            .setOnClickConfirm {
-                                AppDialog.INSTANCE.dismissDialog()
+                        val config = appDialogConfig(R.layout.barcode_result_dialog) {
+                            content = buffer
+                            hideCancel = true
+                            setOnClickConfirm {
+                                AppDialog.dismissDialog()
                             }
-                        val imageView = config.getView<ImageView>(R.id.ivDialogContent)
-                        imageView.setImageBitmap(bitmap)
-                        AppDialog.INSTANCE.showDialog(config)
+                            viewHolder.getView<ImageView>(R.id.ivDialogContent).setImageBitmap(
+                                bitmap
+                            )
+                        }
+                        AppDialog.showDialog(config)
                     } else {
                         // 没有结果
                         LogX.d("result is empty")
@@ -141,34 +147,22 @@ class MainActivity : AppCompatActivity() {
         val optionsCompat = ActivityOptionsCompat.makeCustomAnimation(
             this, android.R.anim.fade_in, android.R.anim.fade_out
         )
-        startActivity(Intent(this, cls), optionsCompat.toBundle())
+        startActivityLauncher.launch(Intent(this, cls), optionsCompat)
     }
 
-    private fun pickPhotoClicked(isQRCode: Boolean) {
+    private fun pickPhoto(isQRCode: Boolean) {
         this.isQrCode = isQRCode
-        startPickPhoto()
+        pickPhotoLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
     }
 
-    /**
-     * 选择照片 - 条形码/二维码 图片识别
-     */
-    private fun startPickPhoto() {
-        val pickIntent = Intent(Intent.ACTION_PICK)
-        pickIntent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*")
-        startActivityForResult(pickIntent, REQUEST_CODE_PHOTO)
-    }
 
     fun onClick(v: View) {
         when (v.id) {
-            R.id.btnQRCodeScanning -> startActivityForResult(
-                Intent(this, QRCodeScanningActivity::class.java),
-                REQUEST_CODE_SCAN_CODE
-            )
-
+            R.id.btnQRCodeScanning -> startActivity(QRCodeScanningActivity::class.java)
             R.id.btnMultipleQRCodeScanning -> startActivity(MultipleQRCodeScanningActivity::class.java)
             R.id.btnBarcodeScanning -> startActivity(BarcodeScanningActivity::class.java)
-            R.id.btnQRCodeRecognitionFromImage -> pickPhotoClicked(true)
-            R.id.btnBarcodeRecognitionFromImage -> pickPhotoClicked(false)
+            R.id.btnQRCodeRecognitionFromImage -> pickPhoto(true)
+            R.id.btnBarcodeRecognitionFromImage -> pickPhoto(false)
             R.id.btnFaceDetectionAndClassification -> startActivity(FaceDetectionActivity::class.java)
             R.id.btnMultipleFaceDetection -> startActivity(MultipleFaceDetectionActivity::class.java)
             R.id.btnFaceMeshDetection -> startActivity(FaceMeshDetectionActivity::class.java)
@@ -180,12 +174,6 @@ class MainActivity : AppCompatActivity() {
             R.id.btnSelfieSegmentation -> startActivity(SelfieSegmentationActivity::class.java)
             R.id.btnTextRecognition -> startActivity(TextRecognitionActivity::class.java)
         }
-    }
-
-    companion object {
-
-        const val REQUEST_CODE_PHOTO = 1
-        const val REQUEST_CODE_SCAN_CODE = 2
     }
 
 }

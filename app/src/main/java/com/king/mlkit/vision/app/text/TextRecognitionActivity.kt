@@ -41,17 +41,17 @@ class TextRecognitionActivity : TextCameraScanActivity() {
         cameraScan.setAnalyzeImage(false)
 
         val config = AppDialogConfig(this, R.layout.text_result_dialog)
-        config.getView<TextView>(R.id.tvDialogContent).movementMethod =
+        config.viewHolder.getView<TextView>(R.id.tvDialogContent).movementMethod =
             ScrollingMovementMethod.getInstance()
         config.setContent(result.result.text)
             .setOnClickConfirm {
-                AppDialog.INSTANCE.dismissDialog()
+                AppDialog.dismissDialog()
                 cameraScan.setAnalyzeImage(true)
             }.setOnClickCancel {
-                AppDialog.INSTANCE.dismissDialog()
+                AppDialog.dismissDialog()
                 finish()
             }
-        AppDialog.INSTANCE.showDialog(config, false)
+        AppDialog.showDialog(config, false)
     }
 
     override fun createAnalyzer(): Analyzer<Text> {

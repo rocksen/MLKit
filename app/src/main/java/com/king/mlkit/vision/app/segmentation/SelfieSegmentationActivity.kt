@@ -9,6 +9,7 @@ import com.king.app.dialog.AppDialogConfig
 import com.king.camera.scan.AnalyzeResult
 import com.king.mlkit.vision.app.R
 import com.king.mlkit.vision.segmentation.SegmentationCameraScanActivity
+import androidx.core.graphics.createBitmap
 
 /**
  * 自拍分割示例
@@ -21,15 +22,15 @@ class SelfieSegmentationActivity : SegmentationCameraScanActivity() {
 
         val config = AppDialogConfig(this, R.layout.result_dialog)
         config.setOnClickConfirm {
-            AppDialog.INSTANCE.dismissDialog()
+            AppDialog.dismissDialog()
             cameraScan.setAnalyzeImage(true)
         }.setOnClickCancel {
-            AppDialog.INSTANCE.dismissDialog()
+            AppDialog.dismissDialog()
             finish()
         }
-        val imageView = config.getView<ImageView>(R.id.ivDialogContent)
+        val imageView = config.viewHolder.getView<ImageView>(R.id.ivDialogContent)
         imageView.setImageBitmap(processBitmap(result))
-        AppDialog.INSTANCE.showDialog(config, false)
+        AppDialog.showDialog(config, false)
     }
 
     private fun processBitmap(result: AnalyzeResult<SegmentationMask>): Bitmap? {
@@ -43,7 +44,7 @@ class SelfieSegmentationActivity : SegmentationCameraScanActivity() {
             val scaleY = bitmap.height * 1f / maskHeight
 
 
-            val resultBitmap = Bitmap.createBitmap(bitmap.width, bitmap.height, Bitmap.Config.ARGB_8888)
+            val resultBitmap = createBitmap(bitmap.width, bitmap.height)
             val maskBitmap = Bitmap.createBitmap(
                 maskColorsFromByteBuffer(mask), maskWidth, maskHeight, Bitmap.Config.ARGB_8888
             )

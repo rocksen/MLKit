@@ -54,7 +54,7 @@
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
             android:layout_weight="1"
-            android:text="@string/app_dialog_ok"
+            android:text="@string/app_dialog_confirm"
             android:textSize="@dimen/app_dialog_button_text_size"
             android:textColor="@color/app_dialog_button_color_selector"
             android:background="?android:attr/selectableItemBackground"/>

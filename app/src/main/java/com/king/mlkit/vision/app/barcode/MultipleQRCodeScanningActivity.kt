@@ -57,15 +57,15 @@ class MultipleQRCodeScanningActivity : QRCodeCameraScanActivity() {
 
         val config = AppDialogConfig(this, R.layout.barcode_result_dialog)
         config.setContent(buffer).setOnClickConfirm {
-            AppDialog.INSTANCE.dismissDialog()
+            AppDialog.dismissDialog()
             cameraScan.setAnalyzeImage(true)
         }.setOnClickCancel {
-            AppDialog.INSTANCE.dismissDialog()
+            AppDialog.dismissDialog()
             finish()
         }
-        val imageView = config.getView<ImageView>(R.id.ivDialogContent)
+        val imageView = config.viewHolder.getView<ImageView>(R.id.ivDialogContent)
         imageView.setImageBitmap(bitmap)
-        AppDialog.INSTANCE.showDialog(config, false)
+        AppDialog.showDialog(config, false)
     }
 
 
